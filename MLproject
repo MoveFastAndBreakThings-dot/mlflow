@@ -1,0 +1,11 @@
+name: drug-discovery-tournament
+
+python_env: python_env.yaml
+
+entry_points:
+  main:
+    parameters:
+      target:
+        type: str
+        default: "clinical_trial_phase_prediction"
+    command: "python pipeline.py"
