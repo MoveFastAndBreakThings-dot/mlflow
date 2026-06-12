@@ -119,6 +119,8 @@ mlflow/
 │
 ├── pipeline.py                           # master script — train, track, promote winner
 ├── MLproject                             # mlflow run . entrypoint
+├── Dockerfile                            # container image definition
+├── docker-compose.yml                    # orchestrates pipeline + UI containers
 ├── python_env.yaml                       # reproducible environment spec
 ├── requirements.txt
 └── ss.png                                # MLflow UI screenshot
@@ -126,7 +128,36 @@ mlflow/
 
 ---
 
-## Setup
+## Run With Docker (Recommended)
+
+No Python, no venv, no pip. Just Docker.
+
+```bash
+docker-compose up --build
+```
+
+```
+pipeline container  → trains all 7 models → logs to shared SQLite volume → exits
+mlflow-ui container → reads same volume   → serves at localhost:5000
+```
+
+Open → `http://localhost:5000`
+
+Watch runs appear live as models train.
+
+**Stop everything:**
+```bash
+docker-compose down
+```
+
+**Wipe all run history and start fresh:**
+```bash
+docker-compose down -v
+```
+
+---
+
+## Run Locally (Manual Setup)
 
 **1. Create virtual environment**
 ```bash
@@ -245,4 +276,5 @@ Fully reproducible — environment, parameters, and entry point all defined in `
 - **XGBoost** — gradient boosted trees
 - **LightGBM** — fast gradient boosting
 - **SQLite** — MLflow tracking backend
+- **Docker + Compose** — containerized, one-command reproducibility
 - **Python 3.12**
