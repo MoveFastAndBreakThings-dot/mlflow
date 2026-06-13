@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt pytest
+
+      - name: Run data tests
+        run: pytest tests/test_data.py -v
+
+      - name: Run full pipeline
+        run: python pipeline.py
+
+      - name: Run MLflow tracking tests
+        run: pytest tests/test_mlflow.py -v

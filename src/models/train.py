@@ -1,6 +1,7 @@
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.svm import SVC
+from sklearn.calibration import CalibratedClassifierCV
 from sklearn.neighbors import KNeighborsClassifier
 from xgboost import XGBClassifier
 from lightgbm import LGBMClassifier
@@ -33,11 +34,13 @@ def get_models(cfg: dict) -> dict:
             class_weight="balanced",
             verbosity=-1,
         ),
-        "svm": SVC(
-            C=m["svm"]["C"],
-            kernel=m["svm"]["kernel"],
-            probability=True,
-            class_weight="balanced",
+        "svm": CalibratedClassifierCV(
+            SVC(
+                C=m["svm"]["C"],
+                kernel=m["svm"]["kernel"],
+                class_weight="balanced",
+            ),
+            ensemble=False,
         ),
         "knn": KNeighborsClassifier(
             n_neighbors=m["knn"]["n_neighbors"],
